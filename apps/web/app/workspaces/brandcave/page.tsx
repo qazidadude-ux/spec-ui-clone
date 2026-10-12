@@ -100,6 +100,7 @@ function EditEntrySheet({
   onClose,
   entry,
   onSave,
+  onRequestDelete,
 }: {
   open: boolean
   onClose: () => void
