@@ -14,7 +14,6 @@ export default function Page() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
-  const [sendError, setSendError] = useState("")
 
   useEffect(() => {
     if (!submitted) return
@@ -22,21 +21,10 @@ export default function Page() {
     return () => clearTimeout(timer)
   }, [submitted, router])
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!email) return
-    setSendError("")
-    // Transition immediately — send email in background
     setSubmitted(true)
-    fetch("/api/auth/magic-link", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    }).then((res) => {
-      if (!res.ok) setSendError("Failed to send the email. Try again.")
-    }).catch(() => {
-      setSendError("Failed to send the email. Try again.")
-    })
   }
 
   return (
@@ -90,13 +78,9 @@ export default function Page() {
               </p>
               <p className="text-foreground font-medium text-sm mb-6">{email}</p>
 
-              {sendError && (
-                <p className="text-xs text-destructive mb-4">{sendError}</p>
-              )}
-
               <Button
                 variant="ghost"
-                onClick={() => { setEmail(""); setSubmitted(false); setSendError("") }}
+                onClick={() => { setEmail(""); setSubmitted(false) }}
               >
                 Use a different email
               </Button>
