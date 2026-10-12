@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { Resend } from "resend"
 import crypto from "crypto"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 // In-memory token store (resets on server restart — fine for learning)
 export const tokenStore = new Map<string, { email: string; expires: number }>()
 
@@ -22,6 +20,7 @@ export async function POST(req: NextRequest) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
   const magicLink = `${appUrl}/api/auth/verify?token=${token}`
 
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const { error } = await resend.emails.send({
     from: "Specretary <onboarding@resend.dev>",
     to: email,
